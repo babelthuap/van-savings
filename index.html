@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Van Savings</title>
+</head>
+
+<body>
+  <h1 id="savings"></h1>
+  <script>
+  (function() {
+    const juneFirst = new Date('2017-06-01 00:00:00 PDT').getTime(); // 1496300400000
+    const dollarsPerMs = 1730 / (365 * 2 * 60 * 60 * 1000);
+    const savingsElement = document.getElementById('savings');
+
+    function updateAmtSaved() {
+      let msRentFree = Date.now() - juneFirst;
+      let amtSaved = msRentFree * dollarsPerMs;
+      savingsElement.innerText = 'amount saved: $' + amtSaved.toFixed(2);
+    }
+    updateAmtSaved();
+    setInterval(updateAmtSaved, 1000);
+  })();
+  </script>
+</body>
+
+</html>
