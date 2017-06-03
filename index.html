@@ -65,11 +65,11 @@
       let mins = Math.floor(ms / msPerMin);
       ms %= msPerMin;
       let secs = Math.floor(ms / msPerSec);
-      return (weeks ? weeks + ' weeks, ' : '') +
-          (days ? days + ' days, ' : '') +
-          (hours ? hours + ' hours, ' : '') +
-          (mins ? mins + ' mins, ' : '') +
-          (secs + ' secs');
+      return (weeks ? weeks + 'w, ' : '') +
+          (days ? days + 'd, ' : '') +
+          (hours ? hours + 'h, ' : '') +
+          (mins ? mins + 'm, ' : '') +
+          (secs + 's');
     }
 
     function pingRed(element, ms) {
