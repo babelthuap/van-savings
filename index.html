@@ -4,13 +4,18 @@
 <head>
   <meta charset="UTF-8">
   <title>Van Savings</title>
+  <style type="text/css">
+  body {
+    font-family: sans-serif;
+  }
+  </style>
 </head>
 
 <body>
   <h1>cost of van: <span id="van-cost"></span></h1>
   <h1>amount saved by not renting: <span id="savings"></span></h1>
   <h1>time to break even: <span id="break-even"></span></h1>
-  <script>
+  <script type="text/javascript">
   (function() {
     const updateIntervalMs = 1000;
     const pingDurationMs = 2000;
