@@ -7,21 +7,61 @@
 </head>
 
 <body>
-  <h1>amount saved: <span id="savings"></span></h1>
+  <h1>cost of van: <span id="van-cost"></span></h1>
+  <h1>amount saved by not renting: <span id="savings"></span></h1>
+  <h1>time left to break even: <span id="break-even"></span></h1>
   <script>
   (function() {
     const juneFirst = new Date('2017-06-01 00:00:00 PDT').getTime();
-    const dollarsPerMs = 1730 / (365 * 2 * 60 * 60 * 1000);
+    const msPerSec = 1000;
+    const msPerMin = msPerSec * 60;
+    const msPerHour = msPerMin * 60;
+    const msPerDay = msPerHour * 24;
+    const msPerWeek = msPerDay * 7;
+    const monthsPerDay = 12 / 365.2425;
+    const rent = 1730;
+    const carInsurance = 205.88 / 6;
+    const dollarsSavedPerMs = (rent - carInsurance) * monthsPerDay / msPerDay;
+    const vanCost = 3800 /* buy */ + 98.2 /* smog */ + 395 /* title */;
+    const totalMsToBreakEven = Math.round(vanCost / dollarsSavedPerMs);
+    const vanCostElement = document.getElementById('van-cost');
     const savingsElement = document.getElementById('savings');
+    const breakEvenElement = document.getElementById('break-even');
     const currencyFmt = ['en-US', { style: 'currency', currency: 'USD' }];
 
     function updateAmtSaved() {
       let msRentFree = Date.now() - juneFirst;
-      let amtSaved = msRentFree * dollarsPerMs;
+      let amtSaved = msRentFree * dollarsSavedPerMs;
       savingsElement.innerText = amtSaved.toLocaleString(...currencyFmt);
+
+      let msToBreakEven = totalMsToBreakEven - msRentFree;
+      if (msToBreakEven > 0) {
+        breakEvenElement.innerText = formatMsASWeeks(msToBreakEven);
+      } else {
+        breakEvenElement.innerText = 'NONE! WOOHOO!';
+      }
     }
+
+    function formatMsASWeeks(ms) {
+      let weeks = Math.floor(ms / msPerWeek);
+      ms %= msPerWeek;
+      let days = Math.floor(ms / msPerDay);
+      ms %= msPerDay;
+      let hours = Math.floor(ms / msPerHour);
+      ms %= msPerHour;
+      let mins = Math.floor(ms / msPerMin);
+      ms %= msPerMin;
+      let secs = Math.floor(ms / msPerSec);
+      return (weeks ? weeks + ' weeks, ' : '') +
+          (days ? days + ' days, ' : '') +
+          (hours ? hours + ' hours, ' : '') +
+          (mins ? mins + ' mins, ' : '') +
+          (secs + ' secs');
+    }
+
+    vanCostElement.innerText = vanCost.toLocaleString(...currencyFmt);
     updateAmtSaved();
-    setInterval(updateAmtSaved, 1000);
+    setInterval(updateAmtSaved, 500);
   })();
   </script>
 </body>
