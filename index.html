@@ -12,6 +12,10 @@
   <h1>time left to break even: <span id="break-even"></span></h1>
   <script>
   (function() {
+    const updateIntervalMs = 500;
+    const pingDurationMs = 2000;
+    const vanCost = 3800 /* buy */ + 98.2 /* smog */ + 395 /* title */;
+
     const juneFirst = new Date('2017-06-01 00:00:00 PDT').getTime();
     const msPerSec = 1000;
     const msPerMin = msPerSec * 60;
@@ -22,27 +26,36 @@
     const rent = 1730;
     const carInsurance = 205.88 / 6;
     const dollarsSavedPerMs = (rent - carInsurance) * monthsPerDay / msPerDay;
-    const vanCost = 3800 /* buy */ + 98.2 /* smog */ + 395 /* title */;
     const totalMsToBreakEven = Math.round(vanCost / dollarsSavedPerMs);
     const vanCostElement = document.getElementById('van-cost');
     const savingsElement = document.getElementById('savings');
     const breakEvenElement = document.getElementById('break-even');
     const currencyFmt = ['en-US', { style: 'currency', currency: 'USD' }];
 
-    function updateAmtSaved() {
+    let amtSaved, timeToBreakEven;
+
+    function updateCounters() {
       let msRentFree = Date.now() - juneFirst;
-      let amtSaved = msRentFree * dollarsSavedPerMs;
-      savingsElement.innerText = amtSaved.toLocaleString(...currencyFmt);
+      let newAmtSaved = (msRentFree * dollarsSavedPerMs).toLocaleString(...currencyFmt);
+      if (amtSaved != newAmtSaved) {
+        amtSaved = newAmtSaved;
+        savingsElement.innerText = amtSaved;
+        pingRed(savingsElement, pingDurationMs);
+      }
 
       let msToBreakEven = totalMsToBreakEven - msRentFree;
       if (msToBreakEven > 0) {
-        breakEvenElement.innerText = formatMsASWeeks(msToBreakEven);
+        let newTimeToBreakEven = formatMsAsWeeks(msToBreakEven);
+        if (timeToBreakEven != newTimeToBreakEven) {
+          timeToBreakEven = newTimeToBreakEven;
+          breakEvenElement.innerText = timeToBreakEven;
+        }
       } else {
         breakEvenElement.innerText = 'NONE! WOOHOO!';
       }
     }
 
-    function formatMsASWeeks(ms) {
+    function formatMsAsWeeks(ms) {
       let weeks = Math.floor(ms / msPerWeek);
       ms %= msPerWeek;
       let days = Math.floor(ms / msPerDay);
@@ -59,9 +72,25 @@
           (secs + ' secs');
     }
 
+    function pingRed(element, ms) {
+      let start;
+      function step(timestamp) {
+        start = start || timestamp;
+        let progress = timestamp - start;
+        let interpolate255 = Math.floor(255 * (ms - progress) / ms);
+        if (interpolate255 > 0) {
+          element.style.color = 'rgb(' + interpolate255 + ', 0, 0)';
+          window.requestAnimationFrame(step);
+        } else {
+          element.style.color = '';
+        }
+      }
+      window.requestAnimationFrame(step);
+    }
+
     vanCostElement.innerText = vanCost.toLocaleString(...currencyFmt);
-    updateAmtSaved();
-    setInterval(updateAmtSaved, 500);
+    updateCounters();
+    window.setInterval(updateCounters, updateIntervalMs);
   })();
   </script>
 </body>
