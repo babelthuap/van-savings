@@ -12,7 +12,7 @@
   <h1>time to break even: <span id="break-even"></span></h1>
   <script>
   (function() {
-    const updateIntervalMs = 500;
+    const updateIntervalMs = 1000;
     const pingDurationMs = 2000;
     const vanCost = 3800 /* buy */ + 98.2 /* smog */ + 395 /* title */;
 
@@ -57,14 +57,10 @@
 
     function formatMsAsWeeks(ms) {
       let weeks = Math.floor(ms / msPerWeek);
-      ms %= msPerWeek;
-      let days = Math.floor(ms / msPerDay);
-      ms %= msPerDay;
-      let hours = Math.floor(ms / msPerHour);
-      ms %= msPerHour;
-      let mins = Math.floor(ms / msPerMin);
-      ms %= msPerMin;
-      let secs = Math.floor(ms / msPerSec);
+      let days = Math.floor(ms % msPerWeek / msPerDay);
+      let hours = Math.floor(ms % msPerDay / msPerHour);
+      let mins = Math.floor(ms % msPerHour / msPerMin);
+      let secs = Math.floor(ms % msPerMin / msPerSec);
       return (weeks ? weeks + 'w, ' : '') +
           (days ? days + 'd, ' : '') +
           (hours ? hours + 'h, ' : '') +
