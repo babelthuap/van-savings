@@ -40,7 +40,7 @@
       if (amtSaved != newAmtSaved) {
         amtSaved = newAmtSaved;
         savingsElement.innerText = amtSaved;
-        pingRed(savingsElement, pingDurationMs);
+        pingGreen(savingsElement, pingDurationMs);
       }
 
       let msToBreakEven = totalMsToBreakEven - msRentFree;
@@ -72,14 +72,14 @@
           (secs + 's');
     }
 
-    function pingRed(element, ms) {
+    function pingGreen(element, ms) {
       let start;
       function step(timestamp) {
         start = start || timestamp;
         let progress = timestamp - start;
         let interpolate255 = Math.floor(255 * (ms - progress) / ms);
         if (interpolate255 > 0) {
-          element.style.color = 'rgb(' + interpolate255 + ', 0, 0)';
+          element.style.color = 'rgb(0, ' + interpolate255 + ', 0)';
           window.requestAnimationFrame(step);
         } else {
           element.style.color = '';
