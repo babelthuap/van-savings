@@ -18,8 +18,10 @@
   <script type="text/javascript">
   (function() {
     // Parameters
-    const updateIntervalMs = 1000
-        , pingDurationMs   = 2000
+    const pingDurationMs   = 2000
+        , updateIntervalMs = 1000
+        , carInsurance     = 205.88 / 6
+        , rent             = 1730
         , vanCost          = 3800 /* buy */ + 98.2 /* smog */ + 395 /* title */;
 
     // Constants
@@ -30,8 +32,6 @@
         , msPerDay           = msPerHour * 24
         , msPerWeek          = msPerDay * 7
         , monthsPerDay       = 12 / 365.2425
-        , rent               = 1730
-        , carInsurance       = 205.88 / 6
         , dollarsSavedPerMs  = (rent - carInsurance) * monthsPerDay / msPerDay
         , totalMsToBreakEven = Math.round(vanCost / dollarsSavedPerMs)
         , vanCostElement     = document.getElementById('van-cost')
